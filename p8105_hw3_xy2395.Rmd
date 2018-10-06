@@ -15,6 +15,8 @@ library(tidyverse)
 library(readxl)
 library(p8105.datasets)
 library(ggridges)
+library(lubridate)
+library(skimr)
 
 # theme_set(theme_bw() + theme(legend.position = "bottom"))
 # data(package = 'p8105.datasets',  brfss_smart2010)
@@ -120,6 +122,7 @@ The goal is to do some exploration of this dataset. To that end, write a `short 
 
 ## Description
 
+The data contains `r nrow(instacart)` observations and `r ncol(instacart)` variables. 
 
 
 
@@ -157,6 +160,7 @@ instacart %>%
 
 ```
 
+
 ### Question 3
 Make a table showing the most popular item aisles “baking ingredients”, “dog food care”, and “packaged vegetables fruits”.
 
@@ -186,7 +190,71 @@ instacart %>%
 ```
 
 
+# Problem 3
 
+The goal is to do some exploration of this dataset. To that end, write a short description of the dataset, noting the size and structure of the data, describing some key variables, and indicating the extent to which `missing data` is an issue. Then, do or answer the following (commenting on the results of each):
+
+## Description
+
+The data contains `r nrow(ny_noaa)` observations and `r ncol(ny_noaa)` variables. 
+
+
+
+
+## Questions
+
+### Question 1
+
+Do some data cleaning. Create separate variables for year, month, and day. Ensure observations for temperature, precipitation, and snowfall are given in reasonable units. For snowfall, what are the most commonly observed values? Why?
+
+```{r}
+tidy_ny_noaa = ny_noaa %>% 
+  mutate(
+    year = as.integer(year(date)),
+    month = as.integer(month(date)),
+    day = as.integer(day(date)),
+    tmax = as.numeric(tmax) / 10,
+    tmin = as.numeric(tmin) / 10,
+    prcp = prcp / 10
+  )
+
+head(tidy_ny_noaa)
+
+tidy_ny_noaa %>% 
+  count(snow) %>% 
+  arrange(desc(n)) %>% 
+  head()
+
+```
+
+For snowfall, `0` and `NA` are the most commonly observed values because for most of the days it did snow in New York.
+
+### Question 2
+
+Make a two-panel plot showing the average temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+
+```{r}
+tidy_ny_noaa %>% 
+  filter(month == 7 | month == 1) %>% 
+  group_by(id, year, month) %>%
+  summarize(avg_tmax = mean(tmax, na.rm = TRUE),
+            avg_tmin = mean(tmin, na.rm = TRUE)
+            ) %>% 
+  ggplot(aes(x = year, y = avg_tmax, group = year)) +
+    geom_boxplot() +
+    facet_grid(~month)
+
+```
+
+### Question 3
+
+Make a two-panel plot showing 
+(i) tmax vs tmin for the full dataset (note that a scatterplot may NOT be the best option); and 
+(ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+
+```{r}
+
+```
 
 
 
