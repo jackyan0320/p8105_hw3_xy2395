@@ -4,11 +4,7 @@ author: "Jack Yan"
 date: "10/04/2018"
 output: github_document
 ---
-knitr::opts_chunk$set(
-  fig.width = 6,
-  fig.asp = .6,
-  out.width = "90%"
-)
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(hexbin)
@@ -67,18 +63,20 @@ CT, FL and NC were observed at 7 locations in 2002.
 
 ### Question 2
 
-Make a “spaghetti plot” that shows the number of observations in each state from 2002 to 2010.
+Make a “spaghetti plot” that shows the number of **locations** in each state from 2002 to 2010.
 
 ```{r}
 tidy_brfss %>% 
-  group_by(locationabbr, year) %>% 
+  group_by(year, locationabbr, locationdesc) %>% 
+  distinct(locationdesc) %>%  
+  group_by(year, locationabbr) %>% 
   count() %>% 
   ggplot(aes(x = year, y = n, color = locationabbr)) +
     geom_line() +
     labs(
-      title = "Number of observations in each state",
+      title = "Number of locations in each state",
       x = "Year",
-      y = "Number of observations"
+      y = "Number of locations"
     ) 
 
 ```
@@ -230,26 +228,24 @@ For snowfall, `0`s are the most commonly observed values because for most of the
 
 ### Question 2
 
-Make a two-panel plot showing the average temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
+Make a two-panel plot showing the average **max** temperature in January and in July in each station across years. Is there any observable / interpretable structure? Any outliers?
 
 ```{r}
 tidy_ny_noaa %>% 
+  filter(is.na(tmax) == FALSE) %>% 
   filter(month == 7 | month == 1) %>% 
-  group_by(id, year, month) %>%
-  summarize(avg_tmax = mean(tmax, na.rm = TRUE),
-            avg_tmin = mean(tmin, na.rm = TRUE)
-            ) %>% 
+  group_by(year, month, id) %>%
+  summarize(avg_tmax = mean(tmax, na.rm = TRUE)) %>% 
   ggplot(aes(x = year, y = avg_tmax, group = year)) +
     geom_boxplot() +
     facet_grid(~month)
-
 ```
 
 ### Question 3
 
 Make a two-panel plot showing 
-(i) tmax vs tmin for the full dataset (note that a scatterplot may NOT be the best option); and 
-(ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
+(i) tmax vs tmin for the full dataset (note that a scatterplot may NOT be the best option)
+
 
 ```{r}
 tidy_ny_noaa %>% 
@@ -258,12 +254,9 @@ tidy_ny_noaa %>%
   geom_hex()
 ```
 
-```{r}
-tidy_ny_noaa %>% 
-  filter(snow > 0, snow < 100) %>% 
-  ggplot(aes(x = year, y = snow)) +
-  geom_violin(aes(group=year)) 
+(ii) make a plot showing the distribution of snowfall values greater than 0 and less than 100 separately by year.
 
+```{r}
 tidy_ny_noaa %>% 
   filter(snow > 0, snow < 100) %>% 
   ggplot(aes(x = year, y = snow)) +
