@@ -18,12 +18,6 @@ theme_set(theme_bw())
 
 ```
 
-```{r}
-
-```
-
-This homework includes figures; the readability of your embedded plots (e.g. **font sizes**, **axis labels**, **titles**) will be assessed in Problems 1+.
-
 # Problem 1
 
 ## Data Cleaning 
@@ -33,6 +27,7 @@ The following code trunk
 * focuses on the “Overall Health” topic using `filter()`, 
 * includes only responses from “Excellent” to “Poor” (i.e. no pre-collapsed categories), and
 * organizes responses as a factor taking levels ordered from “Excellent” to “Poor”.
+
 ```{r}
 tidy_brfss = 
   brfss_smart2010 %>% 
@@ -118,6 +113,7 @@ tidy_brfss %>%
 This table above shows the mean and standard deviation of the proportion of "Excellent" responses across locations in NY state. Among the three years, the mean is the highest in 2002 and the lowest in 2006. The standard deviation is the highest in 2002 and the lowest in 2010. Mean and standard deviation was relatively stable in the three years.
 
 ### Question 1.4
+
 For each year and state, compute the average proportion in each response category (taking the average across locations in a state). Make a five-panel plot that shows, for each response category separately, the distribution of these state-level averages over time.
 
 ```{r}
@@ -142,6 +138,7 @@ tidy_brfss %>%
 As shown in the graph, the average proportion of each response among states oever the years are generally similar, with a range about 10%, with some outliers. For each of the five responses, their proportion stayed stable throughout the years. This plot also indicates that the response 'Very Good' had an overall highest proportion and 'Poor' had the lowest proportion.
 
 # Problem 2
+
 The goal is to do some exploration of this dataset. To that end, write a `short description` of the dataset, noting the `size` and `structure` of the data, `describing` some `key variables`, and giving `illstrative examples of observations`. Then, do or answer the following (`commenting on the results of each`):
 
 ## Description
@@ -151,6 +148,7 @@ The instacart data, held in a `tibble`, contains `r nrow(instacart)` observation
 In this dataset, key variables involved in the following questions include `aisle` and `aisle_id`, which denote the names and identifiers of distinct aisles, `product_name` and `product_id`, which denote names and identifiers of distinct products (items), and `order_dow` and `order_hour_of_day`, which denote the day of the week, and the hour of the day that the order was placed, respectively. Other variables not involved in this problem may also be of interest for other purposes.
 
 Each observation (row) in this dataset denotes a product bought in an order. Different products bought in the same order are separated in different rows. For example, as printed below, the first 5 rows in this dataset contain 15 variables. They are different products bought in order #1 by the same customer. The first product was Bulgarian Yogurt from the yogurt aisle, dairy eggs department. It was bought on 10 a.m. Wednesday. 
+
 ```{r}
 options(tibble.width = Inf) 
 instacart[1:5, ]
@@ -248,7 +246,7 @@ instacart %>%
   
 ```
 
- In this case, a plot is more informative than tables.
+In this case, a plot is more informative than tables.
 
 # Problem 3
 
